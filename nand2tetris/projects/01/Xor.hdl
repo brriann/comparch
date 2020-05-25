@@ -3,6 +3,12 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/01/Xor.hdl
 
+// initial attempt:
+// Nand(a=b,b=b,out=nand1);
+// Nand(a=a,b=nand1,out=nand2a);
+// Nand(a=nand1,b=b,out=nand2b);
+// Nand(a=nand2a,b=nand2b,out=out);
+
 /**
  * Exclusive-or gate:
  * out = not (a == b)
@@ -13,5 +19,9 @@ CHIP Xor {
     OUT out;
 
     PARTS:
-    // Put your code here:
+    Nand(a=a,b=a,out=nanda1);
+    Nand(a=b,b=b,out=nandb1);
+    Nand(a=nanda1,b=b,out=nanda2);
+    Nand(a=nandb1,b=a,out=nandb2);
+    Nand(a=nanda2,b=nandb2,out=out);
 }
