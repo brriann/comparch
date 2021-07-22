@@ -53,9 +53,9 @@ CHIP ALU {
     Mux16(a=y1, b=ny1, sel=ny, out=y2);
 
     // compute function
-    And16(a=x2, b=y2, out=aAndB);
-    Add16(a=x2, b=y2, out=aPlusB);
-    Mux16(a=aAndB, b=aPlusB, sel=f, out=out0);
+    And16(a=x2, b=y2, out=XandY);
+    Add16(a=x2, b=y2, out=XplusY);
+    Mux16(a=XandY, b=XplusY, sel=f, out=out0);
 
     // negate output
     Not16(in=out0, out=nout0);
