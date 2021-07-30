@@ -1,0 +1,6 @@
+https://bob.cs.sonoma.edu/IntroCompOrg-x64/book.html
+https://stackoverflow.com/questions/14794460/how-does-the-arm-architecture-differ-from-x86
+von Neumann architecture
+MIPS (cs10) vs x86
+http://asmirvine.com/
+
