@@ -1,3 +1,8 @@
 *.DS_Store
 *.dat
 *.out
+.vs/
+.vscode/
+*.vcxproj
+*.vcxproj.*
+Debug/
