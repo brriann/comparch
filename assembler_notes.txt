@@ -1,0 +1,11 @@
+(windows)
+
+cd source/tools
+
+type ../path/toAdd.asm
+>> output of file
+
+Assembler ../path/to/Add.asm
+
+type ../path/to/Add.hack
+>> output of file
