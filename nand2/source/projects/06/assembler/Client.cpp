@@ -25,7 +25,7 @@ string getMachineFilePath(string assemblyFilePath) {
 int main()
 {
    // todo, arg1
-   string inputFilePath = "assembly.asm";
+   string inputFilePath = "empty.asm";
    ifstream inputFileStream(inputFilePath);
    if (inputFileStream.bad() || inputFileStream.fail())
    {

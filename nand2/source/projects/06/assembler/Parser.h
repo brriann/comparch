@@ -24,6 +24,8 @@ public:
    string jump();
 private:
    string currentCommand;
+   string nextCommand;
+   ifstream& inputFile;
 };
 
 #endif // Parser_h

@@ -6,19 +6,23 @@
 using std::ifstream;
 using std::string;
 
-Parser::Parser(ifstream& inputFile)
+Parser::Parser(ifstream& inputFileCtr) : inputFile(inputFileCtr)
 {
-
+   getline(inputFile, nextCommand);
+   bool asdf = nextCommand.empty();
+   bool asdf1 = inputFile.eof();
 }
 
 bool Parser::hasMoreCommands()
 {
-   return true;
+   return !(nextCommand.empty() || inputFile.eof());
 }
 
 void Parser::advance()
 {
-
+   currentCommand = nextCommand;
+   getline(inputFile, nextCommand);
+   // throw exception on inputFile.eof() ?
 }
 
 CommandType Parser::commandType()
