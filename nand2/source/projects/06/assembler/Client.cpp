@@ -1,4 +1,4 @@
-#include "Code.h"
+#include "Code.cpp"
 #include "Parser.h"
 
 #include <iostream>
@@ -25,7 +25,7 @@ string getMachineFilePath(string assemblyFilePath) {
 int main()
 {
    // todo, arg1
-   string inputFilePath = "empty.asm";
+   string inputFilePath = "assembly.asm";
    ifstream inputFileStream(inputFilePath);
    if (inputFileStream.bad() || inputFileStream.fail())
    {
@@ -41,16 +41,15 @@ int main()
    {
       parser.advance();
 
+      string debug1, debug2, debug3;
+      bitset<3> debug4;
       switch (parser.commandType())
       {
          case CommandType::A_COMMAND:
-            // todo
             break;
          case CommandType::C_COMMAND:
-            // todo
-            break;
+            debug4 = Code::dest(parser.dest());
          case CommandType::L_COMMAND:
-            // todo
             break;
       }
    }

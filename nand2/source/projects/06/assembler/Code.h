@@ -5,18 +5,24 @@
 
 #include <string>
 #include <bitset>
+#include <map>
 
 using std::string;
 using std::bitset;
+using std::map;
 
 static class Code
 {
 public:
-   static bitset<3> dest(string);
-   static bitset<7> comp(string);
-   static bitset<3> jump(string);
+   static string dest(string);
+   static string comp(string);
+   static string jump(string);
+   static bitset<16> fullInstrC(string, string, string);
+   static bitset<16> fullInstrA(string);
 private:
-   int myPrivateInt; // placeholder
+   static map<string, string> destMap;
+   static map<string, string> compMap;
+   static map<string, string> jumpMap;
 };
 
 #endif // Code_h

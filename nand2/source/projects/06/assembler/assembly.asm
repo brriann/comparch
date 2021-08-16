@@ -1,3 +1,5 @@
+comp;jump
+M=5;
 @2
 D=A
 @3
