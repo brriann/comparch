@@ -6,6 +6,7 @@
 #include <fstream>
 
 using std::cout;
+using std::endl;
 using std::string;
 using std::ifstream;
 using std::ofstream;
@@ -39,23 +40,28 @@ int main()
 
    while (parser.hasMoreCommands())
    {
-      parser.advance();
-
-      string debug1, debug2, debug3;
-      bitset<3> debug4;
+      string symbol, dest, comp, jump, codeDest, codeComp, codeJump;
       switch (parser.commandType())
       {
          case CommandType::A_COMMAND:
+            symbol = parser.symbol();
+            cout << Code::fullInstrA(symbol) << endl;
             break;
          case CommandType::C_COMMAND:
-            debug4 = Code::dest(parser.dest());
+            dest = parser.dest();
+            comp = parser.comp();
+            jump = parser.jump();
+            codeDest = Code::dest(dest);
+            codeComp = Code::comp(comp);
+            codeJump = Code::jump(jump);
+            cout << Code::fullInstrC(codeDest, codeComp, codeJump) << endl;
+            break;
          case CommandType::L_COMMAND:
             break;
       }
+      parser.advance();
    }
 
-
    outFileStream.close();
-   cout << "assembler time";
    return 0;
 }

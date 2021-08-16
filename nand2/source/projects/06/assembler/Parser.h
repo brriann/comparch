@@ -25,7 +25,6 @@ public:
 private:
    string currentCommand;
    CommandType currentCommandType;
-   string nextCommand;
    ifstream& inputFile;
 };
 

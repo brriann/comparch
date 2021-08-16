@@ -13,20 +13,19 @@ const string NULL_STRING = "null";
 
 Parser::Parser(ifstream& inputFileCtr) : inputFile(inputFileCtr)
 {
-   getline(inputFile, nextCommand);
+   getline(inputFile, currentCommand);
 }
 
 bool Parser::hasMoreCommands()
 {
-   return !(nextCommand.empty() || inputFile.eof());
+   // todo, account for last line
+   return !inputFile.eof();
 }
 
 void Parser::advance()
 {
    // TODO, handle comments
-   currentCommand = nextCommand;
-   getline(inputFile, nextCommand);
-   // throw exception on inputFile.eof() ?
+   getline(inputFile, currentCommand);
 }
 
 CommandType Parser::commandType()
