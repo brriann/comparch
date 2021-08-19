@@ -9,6 +9,7 @@ using std::string;
 
 const char EQUALS_CHAR = '=';
 const char SEMICOLON_CHAR = ';';
+const char COMMENT_LEADING_CHAR = '/';
 
 const string NULL_STRING = "null";
 
@@ -39,10 +40,13 @@ bool Parser::hasMoreCommands()
 void Parser::advance()
 {
    //TODO, handle comments
-   while (currentCommand.empty() || currentCommand.at(0) == '/')
+   while (currentCommand.empty() || currentCommand.at(0) == COMMENT_LEADING_CHAR)
    {
       getline(inputFile, currentCommand);
    }
+   // trim trailing comment
+   currentCommand = currentCommand.substr(0, currentCommand.find(COMMENT_LEADING_CHAR));
+   // trim left+right whitespace
    currentCommand = trim(currentCommand);
    commandList.push_back(currentCommand);
 }

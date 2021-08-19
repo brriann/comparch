@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <exception>
 
 using std::cout;
 using std::endl;
@@ -13,6 +14,7 @@ using std::ifstream;
 using std::ofstream;
 using std::size_t;
 using std::to_string;
+using std::exception;
 
 
 const char FILE_EXTENSION_DELIMITER = '.';
@@ -23,6 +25,20 @@ string getMachineFilePath(string assemblyFilePath) {
    size_t dotPos = assemblyFilePath.find_last_of(FILE_EXTENSION_DELIMITER);
    string dir = assemblyFilePath.substr(0, dotPos);
    return dir + FILE_EXTENSION_DELIMITER + MACHINE_FILE_EXTENSION;
+}
+
+bool tryParseStringToInt(string s)
+{
+   int i;
+   try
+   {
+      i = stoi(s);
+      return true;
+   }
+   catch (exception e)
+   {
+      return false;
+   }
 }
 
 int main(int argc, char* argv[])
@@ -62,7 +78,7 @@ int main(int argc, char* argv[])
                return 2;
             }
             // label next line of code
-            symbolTable.addEntry(symbol, parser.getCommandCount() + 1);
+            symbolTable.addEntry(symbol, parser.getCommandCount());
             break;
       }
    }
@@ -73,24 +89,32 @@ int main(int argc, char* argv[])
    for(auto it = parser.commandListBegin(); it != parser.commandListEnd(); ++it)
    {
       string currentCommand = *it;
-      string symbol, symbolAddress, dest, comp, jump, codeDest, codeComp, codeJump;
+      string symbol, symbolAddress, dest, comp, jump, codeDest, codeComp, codeJump, toFile;
       switch (parser.commandType(currentCommand))
       {
          case CommandType::A_COMMAND:
             symbol = parser.symbol(currentCommand);
-            if (symbolTable.contains(symbol))
+            if (tryParseStringToInt(symbol))
             {
-               symbolAddress = to_string(symbolTable.getAddress(symbol));
+               toFile = symbol;
             }
             else
             {
-               int nextMemoryAddress = parser.getNextMemoryAddress();
-               symbolTable.addEntry(symbol, nextMemoryAddress);
-               symbolAddress = to_string(nextMemoryAddress);
+               if (symbolTable.contains(symbol))
+               {
+                  symbolAddress = to_string(symbolTable.getAddress(symbol));
+               }
+               else
+               {
+                  int nextMemoryAddress = parser.getNextMemoryAddress();
+                  symbolTable.addEntry(symbol, nextMemoryAddress);
+                  symbolAddress = to_string(nextMemoryAddress);
 
-               parser.incrementNextMemoryAddress();
+                  parser.incrementNextMemoryAddress();
+               }
+               toFile = symbolAddress;
             }
-            outFileStream << Code::fullInstrA(symbolAddress) << endl;
+            outFileStream << Code::fullInstrA(toFile) << endl;
             break;
          case CommandType::C_COMMAND:
             dest = parser.dest(currentCommand);
