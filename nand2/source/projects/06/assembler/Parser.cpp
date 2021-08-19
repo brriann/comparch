@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <string>
+#include <algorithm>
 
 using std::ifstream;
 using std::string;
@@ -11,21 +12,24 @@ const char SEMICOLON_CHAR = ';';
 
 const string NULL_STRING = "null";
 
-Parser::Parser(ifstream& inputFileCtr) : inputFile(inputFileCtr)
+Parser::Parser(ifstream& inputFileCtr) : inputFile(inputFileCtr) 
 {
-   getline(inputFile, currentCommand);
+   // placeholder init
+   currentCommandType = CommandType::A_COMMAND;
 }
 
 bool Parser::hasMoreCommands()
 {
-   // todo, account for last line
-   return !inputFile.eof();
+   return getline(inputFile, currentCommand) || !inputFile.eof();
 }
 
 void Parser::advance()
 {
-   // TODO, handle comments
-   getline(inputFile, currentCommand);
+   //TODO, handle comments
+   while (currentCommand.empty() || currentCommand.at(0) == '/')
+   {
+      getline(inputFile, currentCommand);
+   }
 }
 
 CommandType Parser::commandType()

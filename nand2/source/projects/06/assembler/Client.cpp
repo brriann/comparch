@@ -23,10 +23,9 @@ string getMachineFilePath(string assemblyFilePath) {
    return dir + FILE_EXTENSION_DELIMITER + MACHINE_FILE_EXTENSION;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-   // todo, arg1
-   string inputFilePath = "assembly.asm";
+   string inputFilePath = argv[1];
    ifstream inputFileStream(inputFilePath);
    if (inputFileStream.bad() || inputFileStream.fail())
    {
@@ -40,12 +39,13 @@ int main()
 
    while (parser.hasMoreCommands())
    {
+      parser.advance();
       string symbol, dest, comp, jump, codeDest, codeComp, codeJump;
       switch (parser.commandType())
       {
          case CommandType::A_COMMAND:
             symbol = parser.symbol();
-            cout << Code::fullInstrA(symbol) << endl;
+            outFileStream << Code::fullInstrA(symbol) << endl;
             break;
          case CommandType::C_COMMAND:
             dest = parser.dest();
@@ -54,12 +54,11 @@ int main()
             codeDest = Code::dest(dest);
             codeComp = Code::comp(comp);
             codeJump = Code::jump(jump);
-            cout << Code::fullInstrC(codeDest, codeComp, codeJump) << endl;
+            outFileStream << Code::fullInstrC(codeDest, codeComp, codeJump) << endl;
             break;
          case CommandType::L_COMMAND:
             break;
       }
-      parser.advance();
    }
 
    outFileStream.close();
