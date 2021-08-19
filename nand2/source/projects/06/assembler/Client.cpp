@@ -1,5 +1,6 @@
 #include "Code.cpp"
 #include "Parser.h"
+#include "SymbolTable.h"
 
 #include <iostream>
 #include <string>
@@ -11,6 +12,7 @@ using std::string;
 using std::ifstream;
 using std::ofstream;
 using std::size_t;
+using std::to_string;
 
 
 const char FILE_EXTENSION_DELIMITER = '.';
@@ -37,26 +39,71 @@ int main(int argc, char* argv[])
 
    Parser parser = Parser(inputFileStream);
 
+   SymbolTable symbolTable = SymbolTable();
+
+   // FIRST PASS - BUILD SYMBOL TABLE AND STORE FILE IN MEMORY
    while (parser.hasMoreCommands())
    {
       parser.advance();
-      string symbol, dest, comp, jump, codeDest, codeComp, codeJump;
+      string symbol;
       switch (parser.commandType())
       {
          case CommandType::A_COMMAND:
-            symbol = parser.symbol();
-            outFileStream << Code::fullInstrA(symbol) << endl;
+            parser.incrementCommandCount();
             break;
          case CommandType::C_COMMAND:
-            dest = parser.dest();
-            comp = parser.comp();
-            jump = parser.jump();
+            parser.incrementCommandCount();
+            break;
+         case CommandType::L_COMMAND:
+            symbol = parser.symbol();
+            if (symbolTable.contains(symbol))
+            {
+               // invalid use of label symbols
+               return 2;
+            }
+            // label next line of code
+            symbolTable.addEntry(symbol, parser.getCommandCount() + 1);
+            break;
+      }
+   }
+
+   parser.closeInputFile();
+
+   // SECOND PASS - TRANSLATE IN-MEMORY VERSION USING SYMBOL TABLE
+   for(auto it = parser.commandListBegin(); it != parser.commandListEnd(); ++it)
+   {
+      string currentCommand = *it;
+      string symbol, symbolAddress, dest, comp, jump, codeDest, codeComp, codeJump;
+      switch (parser.commandType(currentCommand))
+      {
+         case CommandType::A_COMMAND:
+            symbol = parser.symbol(currentCommand);
+            if (symbolTable.contains(symbol))
+            {
+               symbolAddress = to_string(symbolTable.getAddress(symbol));
+            }
+            else
+            {
+               int nextMemoryAddress = parser.getNextMemoryAddress();
+               symbolTable.addEntry(symbol, nextMemoryAddress);
+               symbolAddress = to_string(nextMemoryAddress);
+
+               parser.incrementNextMemoryAddress();
+            }
+            outFileStream << Code::fullInstrA(symbolAddress) << endl;
+            break;
+         case CommandType::C_COMMAND:
+            dest = parser.dest(currentCommand);
+            comp = parser.comp(currentCommand);
+            jump = parser.jump(currentCommand);
             codeDest = Code::dest(dest);
             codeComp = Code::comp(comp);
             codeJump = Code::jump(jump);
             outFileStream << Code::fullInstrC(codeDest, codeComp, codeJump) << endl;
             break;
          case CommandType::L_COMMAND:
+            // skip (label)'s since they're already in symbol table.
+            // TODO, should labels even be stored in memory as file is parsed?
             break;
       }
    }
