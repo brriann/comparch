@@ -4,7 +4,9 @@
 #define SymbolTable_h
 
 #include <string>
+#include <unordered_map>
 
+using std::unordered_map;
 using std::string;
 
 class SymbolTable
@@ -15,7 +17,7 @@ public:
    bool contains(string);
    int getAddress(string);
 private:
-   int myPrivateInt; // placeholder
+   unordered_map<string, int> symbolTable;
 };
 
 #endif // SymbolTable_h
