@@ -65,8 +65,6 @@ int main(int argc, char* argv[])
       switch (parser.commandType())
       {
          case CommandType::A_COMMAND:
-            parser.incrementCommandCount();
-            break;
          case CommandType::C_COMMAND:
             parser.incrementCommandCount();
             break;
